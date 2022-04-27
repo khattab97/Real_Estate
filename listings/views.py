@@ -1,12 +1,18 @@
 from django.shortcuts import render
+from .models import Listing
+from django.shortcuts import get_object_or_404
 
 
-# Create your views here.
 def index(request):
-    return render(request, 'listings/listings.html')
+    listings = Listing.objects.all()
+    ctx = {
+        'listings': listings
+    }
+    return render(request, 'listings/listings.html', ctx)
 
 
-def listing(request):
+def listing(request, listing_id):
+
     return render(request, 'listings/listing.html')
 
 

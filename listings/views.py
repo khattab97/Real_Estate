@@ -53,5 +53,6 @@ def search(request):
     'price_choices': price_choices,
     'state_choices': state_choices,
     'listings': listings,
+    'values': request.GET,
 }
     return render(request, 'listings/search.html', ctx)

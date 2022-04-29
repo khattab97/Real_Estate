@@ -16,8 +16,11 @@ def index(request):
 
 
 def listing(request, listing_id):
-
-    return render(request, 'listings/listing.html')
+    listing1 = get_object_or_404(Listing, pk=listing_id)
+    ctx = {
+        'listing': listing1
+    }
+    return render(request, 'listings/listing.html', ctx)
 
 
 def search(request):

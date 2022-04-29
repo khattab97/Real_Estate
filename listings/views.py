@@ -3,6 +3,7 @@ from .models import Listing
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from .choices import bedroom_choices, price_choices, state_choices
+from django.db.models import Q
 
 
 def index(request):
@@ -25,9 +26,32 @@ def listing(request, listing_id):
 
 
 def search(request):
+    listings = Listing.objects.all()
+
+    strval = request.GET.get('keywords', False)
+    if strval:
+        listings = listings.filter(description__icontains=strval)
+
+    strval = request.GET.get('city', False)
+    if strval:
+        listings = listings.filter(city__iexact=strval)
+
+    strval = request.GET.get('state', False)
+    if strval:
+        listings = listings.filter(state__iexact=strval)
+
+    strval = request.GET.get('bedrooms', False)
+    if strval:
+        listings = listings.filter(bedrooms__lte=strval)
+
+    strval = request.GET.get('price', False)
+    if strval:
+        listings = listings.filter(price__lte=strval)
+
     ctx = {
-        'bedroom_choices': bedroom_choices,
-        'price_choices': price_choices,
-        'state_choices': state_choices,
-    }
+    'bedroom_choices': bedroom_choices,
+    'price_choices': price_choices,
+    'state_choices': state_choices,
+    'listings': listings,
+}
     return render(request, 'listings/search.html', ctx)

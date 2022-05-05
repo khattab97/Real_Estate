@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages, auth
+from contacts.models import Contact
 
 
 def login(request):
@@ -60,4 +61,8 @@ def register(request):
         return render(request, 'accounts/register.html')
 
 def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+    contacts = Contact.objects.order_by('-contact_date').filter(user_id=request.user.id)
+    ctx = {
+        'contacts': contacts,
+    }
+    return render(request, 'accounts/dashboard.html', ctx)
